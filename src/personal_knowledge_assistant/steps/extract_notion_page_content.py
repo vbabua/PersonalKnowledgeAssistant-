@@ -1,14 +1,14 @@
 from zenml import step, get_step_context
 from typing_extensions import Annotated
 
-from src.personal_knowledge_assistant.models import DocumentMetadata, Document
+from src.personal_knowledge_assistant.domain.documents.notion import NotionDocument, NotionDocumentMetadata
 from src.personal_knowledge_assistant.notion.content_extractor import NotionContentExtractor
 from loguru import logger
 
 @step
 def extract_notion_page_content(
-    notion_documents_metadata: Annotated[list[DocumentMetadata], "notion_documents_metadata"]
-) -> Annotated[list[Document], "notion_documents"]:
+    notion_documents_metadata: Annotated[list[NotionDocumentMetadata], "notion_documents_metadata"]
+) -> Annotated[list[NotionDocument], "notion_documents"]:
     """
     Extracts content from Notion pages using their metadata.
 

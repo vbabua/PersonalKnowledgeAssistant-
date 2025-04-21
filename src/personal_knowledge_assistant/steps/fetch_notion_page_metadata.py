@@ -2,13 +2,13 @@ from zenml import step, get_step_context
 from typing_extensions import Annotated
 from loguru import logger
 
-from src.personal_knowledge_assistant.models import DocumentMetadata
+from src.personal_knowledge_assistant.domain.documents.notion import NotionDocumentMetadata
 from src.personal_knowledge_assistant.notion.page_extractor import NotionPageFetcher
 
 @step
 def fetch_notion_page_metadata(
     database_id : str
-) -> Annotated[list[DocumentMetadata], "notion_documents_metadata"]:
+) -> Annotated[list[NotionDocumentMetadata], "notion_documents_metadata"]:
     """
     Fetches metadata of pages from a Notion database.
 
