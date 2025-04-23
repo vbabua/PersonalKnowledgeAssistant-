@@ -6,10 +6,17 @@ from src.personal_knowledge_assistant.steps.fetch_notion_page_metadata import fe
 from src.personal_knowledge_assistant.steps.extract_notion_page_content import extract_notion_page_content
 from src.personal_knowledge_assistant.steps.save_documents_to_disk import save_documents_to_disk
 from src.personal_knowledge_assistant.steps.clean_notion_documents import clean_notion_documents
+from src.personal_knowledge_assistant.domain.documents.notion import NotionDocumentMetadata
+from src.personal_knowledge_assistant.steps.clean_chunk_embed import clean_chunk_embed
 
 @pipeline
 def notion_to_vector_pipeline(database_ids : list[str], 
-                              data_directory : Path
+                              data_directory : Path,
+                                destination_collection_name : str,
+                                processing_batch_size : int,
+                                max_concurrent_tasks : int,
+                                chunk_size : int,
+                            
                               ) -> None:
     """
     A pipeline that extracts data from Notion and converts it into vector embeddings.
@@ -34,6 +41,15 @@ def notion_to_vector_pipeline(database_ids : list[str],
         cleaned_documents = clean_notion_documents(documents = documents)
        
         resutlting_documents = save_documents_to_disk(documents = cleaned_documents, output_dir = notion_data_directory / f"notion_data_{index}")
+
+        clean_chunk_embed(
+            documents=documents,
+            collection_name=destination_collection_name,
+            processing_batch_size=processing_batch_size,
+            processing_max_workers=max_concurrent_tasks,
+            chunk_size=chunk_size,
+        
+        )
 
         logger.info(f"Completed extraction and saving for Notion database {database_id}.")
 
